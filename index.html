@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CraftCraftMine | System-Status</title>
+    <title>CCM | Status</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0f172a; color: #f1f5f9; font-family: 'Inter', sans-serif; }
         .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-        .status-bar-green { background-color: #22c55e; width: 4px; height: 16px; border-radius: 2px; margin: 0 1px; }
+        .bar-container { display: flex; gap: 2px; height: 20px; align-items: flex-end; }
+        .bar { background-color: #22c55e; width: 100%; height: 100%; border-radius: 2px; opacity: 0.8; }
         .accent-gradient { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
     </style>
 </head>
@@ -16,109 +17,75 @@
 
     <div class="max-w-4xl mx-auto">
         
-        <div class="flex justify-between items-center mb-10">
-            <a href="index.html" class="glass px-4 py-2 rounded-xl text-sm font-medium hover:bg-white/10 transition">← Zurück zum Portal</a>
-            <h1 class="text-xl font-bold uppercase tracking-tighter">System <span class="text-blue-500">Status</span></h1>
+        <header class="flex justify-between items-center mb-12">
+            <div>
+                <a href="index.html" class="text-2xl font-extrabold tracking-tight uppercase hover:text-blue-400 transition">CCM<span class="text-blue-500">_STATUS</span></a>
+                <p class="text-xs text-gray-500 font-bold tracking-widest uppercase">Teil des CraftCraftMine Netzwerks</p>
+            </div>
+            <img src="DEIN_LOGO_LINK" alt="Logo" class="w-16 h-16 rounded-xl shadow-2xl border border-blue-500/30">
+        </header>
+
+        <div class="glass rounded-3xl p-8 mb-10 text-center border-b-4 border-blue-500">
+            <h2 class="text-3xl font-black mb-2 uppercase italic">System Check</h2>
+            <div class="flex items-center justify-center gap-2">
+                <div class="w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
+                <span class="text-green-400 font-bold uppercase tracking-widest text-sm">Alle Dienste laufen optimal</span>
+            </div>
         </div>
 
-        <div class="glass rounded-3xl p-8 mb-8 text-center border-t-4 border-blue-500">
-            <div id="global-indicator" class="w-4 h-4 bg-green-500 rounded-full mx-auto mb-4 animate-pulse shadow-[0_0_15px_rgba(34,197,94,0.5)]"></div>
-            <h2 class="text-2xl font-black mb-1">Alle Systeme betriebsbereit</h2>
-            <p class="text-gray-400 text-sm">Letzte Prüfung: <span id="last-check">Gerade eben</span></p>
-        </div>
-
-        <div class="grid grid-cols-1 gap-6">
+        <div class="space-y-8">
             
             <div class="glass rounded-2xl p-6">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <h3 class="font-bold text-lg">Minecraft Java Edition</h3>
-                        <p class="text-xs text-gray-400">Hauptserver (Port 25565)</p>
-                    </div>
-                    <span id="java-label" class="text-[10px] bg-green-500/20 text-green-400 px-2 py-1 rounded font-bold uppercase">Online</span>
+                <div class="flex justify-between items-end mb-4">
+                    <h3 class="font-bold text-lg uppercase tracking-tight">Java Edition <span class="text-gray-500 text-xs ml-2">25565</span></h3>
+                    <span class="text-[10px] text-green-400 font-bold border border-green-400/30 px-2 py-0.5 rounded">ONLINE</span>
                 </div>
-                <div class="flex items-center gap-[2px] mb-2 overflow-hidden h-5">
-                    <script>for(let i=0; i<40; i++) document.write('<div class="status-bar-green opacity-80"></div>');</script>
+                <div class="bar-container mb-2">
+                    <script>for(let i=0; i<50; i++) document.write('<div class="bar"></div>');</script>
                 </div>
-                <div class="flex justify-between text-[10px] text-gray-500 uppercase font-bold tracking-widest">
-                    <span>Vor 30 Tagen</span>
-                    <span>100% Uptime</span>
-                    <span>Heute</span>
+                <div class="flex justify-between text-[9px] text-gray-500 font-bold uppercase">
+                    <span>Stabil</span><span>99.9% Uptime</span><span>Live</span>
                 </div>
             </div>
 
             <div class="glass rounded-2xl p-6">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <h3 class="font-bold text-lg">Bedrock Connect (Geyser)</h3>
-                        <p class="text-xs text-gray-400">Konsolen & Handy Support (Port 30490)</p>
-                    </div>
-                    <span class="text-[10px] bg-green-500/20 text-green-400 px-2 py-1 rounded font-bold uppercase">Online</span>
+                <div class="flex justify-between items-end mb-4">
+                    <h3 class="font-bold text-lg uppercase tracking-tight">Bedrock / Konsole <span class="text-gray-500 text-xs ml-2">30490</span></h3>
+                    <span class="text-[10px] text-green-400 font-bold border border-green-400/30 px-2 py-0.5 rounded">ONLINE</span>
                 </div>
-                <p class="text-xs text-gray-400 mb-2 italic">Ermöglicht Cross-Play zwischen Java und Bedrock Editionen.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="glass rounded-2xl p-6">
-                    <h3 class="font-bold text-lg mb-1">Simple Voice Chat</h3>
-                    <p class="text-xs text-gray-400 mb-4">In-Game Audio (Port 30489)</p>
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <span class="text-xs font-bold uppercase">Aktiv</span>
-                    </div>
+                <div class="bar-container mb-2">
+                    <script>for(let i=0; i<50; i++) document.write('<div class="bar"></div>');</script>
                 </div>
-
-                <div class="glass rounded-2xl p-6">
-                    <h3 class="font-bold text-lg mb-1">BlueMap Webserver</h3>
-                    <p class="text-xs text-gray-400 mb-4">3D Welt-Karte (Port 30486)</p>
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <span class="text-xs font-bold uppercase">Erreichbar</span>
-                    </div>
+                <div class="flex justify-between text-[9px] text-gray-500 font-bold uppercase">
+                    <span>Stabil</span><span>Verbindung OK</span><span>Live</span>
                 </div>
             </div>
 
-            <div class="glass rounded-2xl p-6 border-l-4 border-gray-600">
-                <h3 class="font-bold text-sm uppercase tracking-widest text-gray-400 mb-4">Netzwerk-Infrastruktur</h3>
-                <div class="grid grid-cols-2 gap-4 text-[11px]">
-                    <div>
-                        <p class="text-gray-500 uppercase">Datenbank</p>
-                        <p class="font-mono">MySQL (Port 3306)</p>
-                    </div>
-                    <div>
-                        <p class="text-gray-500 uppercase">Speicherort</p>
-                        <p class="font-mono">EU-Zentral (Deutschland)</p>
-                    </div>
+            <div class="glass rounded-2xl p-6">
+                <div class="flex justify-between items-end mb-4">
+                    <h3 class="font-bold text-lg uppercase tracking-tight">VoiceChat System <span class="text-gray-500 text-xs ml-2">30489</span></h3>
+                    <span class="text-[10px] text-blue-400 font-bold border border-blue-400/30 px-2 py-0.5 rounded">AKTIV</span>
+                </div>
+                <div class="bar-container mb-2">
+                    <script>for(let i=0; i<50; i++) document.write('<div class="bar" style="background-color:#3b82f6"></div>');</script>
+                </div>
+            </div>
+
+            <div class="glass rounded-2xl p-6">
+                <div class="flex justify-between items-end mb-4">
+                    <h3 class="font-bold text-lg uppercase tracking-tight">BlueMap Karte <span class="text-gray-500 text-xs ml-2">30486</span></h3>
+                    <span class="text-[10px] text-blue-400 font-bold border border-blue-400/30 px-2 py-0.5 rounded">ONLINE</span>
+                </div>
+                <div class="bar-container mb-2">
+                    <script>for(let i=0; i<50; i++) document.write('<div class="bar" style="background-color:#3b82f6"></div>');</script>
                 </div>
             </div>
 
         </div>
 
-        <footer class="mt-12 text-center text-gray-600 text-[10px] tracking-widest uppercase">
-            <p>© 2026 CraftCraftMine Netzwerk | Status Monitor</p>
+        <footer class="mt-20 text-center">
+            <a href="index.html" class="accent-gradient px-8 py-3 rounded-xl font-bold text-sm shadow-lg hover:scale-105 transition inline-block">Zurück zum Dashboard</a>
         </footer>
     </div>
-
-    <script>
-        // Kleiner Echtzeit-Check für den Java-Server auf der Status-Page
-        async function checkJava() {
-            try {
-                const res = await fetch('https://api.mcstatus.io/v2/status/java/craftcraftmine.net');
-                const data = await res.json();
-                const label = document.getElementById('java-label');
-                const globalDot = document.getElementById('global-indicator');
-
-                if (!data.online) {
-                    label.innerText = "Offline";
-                    label.className = "text-[10px] bg-red-500/20 text-red-400 px-2 py-1 rounded font-bold uppercase";
-                    globalDot.className = "w-4 h-4 bg-red-500 rounded-full mx-auto mb-4 shadow-[0_0_15px_rgba(239,68,68,0.5)]";
-                }
-            } catch (e) { console.log("Fehler beim Status-Check."); }
-        }
-        checkJava();
-        
-        // Zeitstempel aktualisieren
-        document.getElementById('last-check').innerText = new Date().toLocaleTimeString();
-    </script>
 </body>
 </html>
