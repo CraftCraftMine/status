@@ -19,17 +19,28 @@
 </head>
 <body class="min-h-screen p-4 md:p-8">
 
+    <script>
+        // --- MANUELLE EINSTELLUNGEN ---
+        // Status-Typen: 'online' (grün), 'warning' (gelb), 'critical' (rot)
+        const GLOBAL_STATUS_TYPE = 'online'; 
+        const GLOBAL_STATUS_MSG  = 'Alle Systeme laufen planmäßig. Vollständig operational.';
+        // ------------------------------
+    </script>
+
     <div class="max-w-4xl mx-auto">
         <header class="flex justify-between items-center mb-10">
             <a href="https://craftcraftmine.net" class="glass px-5 py-2 rounded-xl text-[10px] font-black text-red-500 uppercase tracking-widest hover:bg-red-500/10 transition border border-red-500/20">
                 ← PORTAL
             </a>
-            <div class="text-[10px] font-bold text-gray-500 tracking-widest uppercase italic">System-Protokoll V2.3</div>
+            <div class="text-[10px] font-bold text-gray-500 tracking-widest uppercase italic">System-Protokoll V2.4</div>
         </header>
 
-        <div class="text-center mb-12">
-            <h1 class="text-4xl font-black uppercase tracking-tighter italic">CRAFTCRAFT<span class="text-red-600">MINE</span></h1>
-            <p class="text-gray-500 text-[10px] font-bold tracking-[0.4em] uppercase mt-2">Infrastruktur Status</p>
+        <div id="status-banner" class="rounded-[1.5rem] p-6 mb-12 flex items-center gap-6 shadow-2xl transition-all border-l-8">
+            <div id="status-icon" class="w-12 h-12 rounded-full flex items-center justify-center text-2xl animate-pulse"></div>
+            <div>
+                <h2 class="text-xs font-black uppercase tracking-[0.2em] opacity-60 mb-1">Aktueller Systemstatus</h2>
+                <p id="status-text" class="text-lg font-bold italic tracking-tight"></p>
+            </div>
         </div>
 
         <div class="space-y-6">
@@ -37,14 +48,14 @@
                 <div class="flex justify-between items-center mb-4">
                     <div>
                         <h3 class="font-black uppercase tracking-widest text-sm">Minecraft Netzwerk</h3>
-                        <p class="text-[9px] text-gray-500 uppercase mt-1">Java Edition Main-Server</p>
+                        <p class="text-[9px] text-gray-500 uppercase mt-1">Spiel-Server (Java)</p>
                     </div>
                     <span id="java-label" class="text-[9px] font-black py-1 px-3 rounded-full bg-gray-900 border border-white/5 uppercase">Lädt...</span>
                 </div>
                 <div class="bar-container" id="java-bars"></div>
                 <div class="flex justify-between mt-3 text-[9px] font-bold text-gray-600 uppercase">
                     <span id="java-uptime">--% Uptime</span>
-                    <span>Status: Erreichbarkeit</span>
+                    <span>Verlauf 24h</span>
                 </div>
                 <div id="java-details" class="detail-box glass p-4 rounded-xl border border-green-500/20 mt-2"></div>
             </div>
@@ -53,7 +64,7 @@
                 <div class="flex justify-between items-center mb-4">
                     <div>
                         <h3 class="font-black uppercase tracking-widest text-sm text-red-500">Web-Portal</h3>
-                        <p class="text-[9px] text-gray-500 uppercase mt-1">Community Website</p>
+                        <p class="text-[9px] text-gray-500 uppercase mt-1">Hauptwebsite & News</p>
                     </div>
                     <span id="web-label" class="text-[9px] font-black py-1 px-3 rounded-full bg-gray-900 border border-white/5 uppercase">Lädt...</span>
                 </div>
@@ -69,18 +80,9 @@
                 <div class="bar-container" id="domain-bars"></div>
                 <div id="domain-details" class="detail-box glass p-4 rounded-xl border border-white/10 mt-2"></div>
             </div>
-
-            <div class="glass rounded-[1.5rem] p-6 border-t-2 border-orange-500/30">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-black uppercase tracking-widest text-xs text-orange-400">Live Map</h3>
-                    <span id="map-label" class="text-[9px] font-black py-1 px-3 rounded-full bg-gray-900 border border-white/5 uppercase">Lädt...</span>
-                </div>
-                <div class="bar-container" id="map-bars"></div>
-                <div id="map-details" class="detail-box glass p-4 rounded-xl border border-orange-500/20 mt-2"></div>
-            </div>
         </div>
 
-        <footer class="mt-16 flex flex-col md:flex-row justify-between items-center gap-6 opacity-40">
+        <footer class="mt-16 flex flex-col md:flex-row justify-between items-center gap-6 opacity-40 pb-10">
             <div class="text-[9px] font-bold tracking-widest uppercase text-center md:text-left">
                 © 2026 CraftCraftMine Netzwerk
             </div>
@@ -91,11 +93,32 @@
     </div>
 
     <script>
+        // Status-Banner Initialisierung
+        const banner = document.getElementById('status-banner');
+        const icon = document.getElementById('status-icon');
+        const text = document.getElementById('status-text');
+
+        if(GLOBAL_STATUS_TYPE === 'online') {
+            banner.className += " bg-green-500/10 border-green-500 text-green-400";
+            icon.className += " bg-green-500/20";
+            icon.innerText = "✓";
+            text.innerText = GLOBAL_STATUS_MSG;
+        } else if(GLOBAL_STATUS_TYPE === 'warning') {
+            banner.className += " bg-orange-500/10 border-orange-500 text-orange-400";
+            icon.className += " bg-orange-500/20";
+            icon.innerText = "!";
+            text.innerText = GLOBAL_STATUS_MSG;
+        } else {
+            banner.className += " bg-red-500/10 border-red-500 text-red-500";
+            icon.className += " bg-red-500/20";
+            icon.innerText = "✕";
+            text.innerText = GLOBAL_STATUS_MSG;
+        }
+
         const MONITORS = {
             java:    'm802228348-28e6cbe112134f661ce9d6ac',
-            web:     'DEIN_KEY_NEUE_WEBSITE',
-            domain:  'DEIN_KEY_DOMAIN',
-            map:     'DEIN_KEY_MAP'
+            web:     'DEIN_KEY_WEBSITE',
+            domain:  'DEIN_KEY_DOMAIN'
         };
 
         function closeDetails() {
