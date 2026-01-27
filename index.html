@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CraftCraftMine | Status</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="status-config.js"></script>
     <style>
         body { background-color: #0a0f1e; color: #f1f5f9; font-family: 'Inter', sans-serif; }
         .glass { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
@@ -19,20 +20,12 @@
 </head>
 <body class="min-h-screen p-4 md:p-8">
 
-    <script>
-        // --- MANUELLE EINSTELLUNGEN FÜR DAS BANNER ---
-        // Status-Typen: 'online' (grün), 'warning' (gelb), 'critical' (rot)
-        const GLOBAL_STATUS_TYPE = 'online'; 
-        const GLOBAL_STATUS_MSG  = 'Alle Systeme laufen planmäßig. Vollständig operational.';
-        // ---------------------------------------------
-    </script>
-
     <div class="max-w-4xl mx-auto">
         <header class="flex justify-between items-center mb-10">
             <a href="https://craftcraftmine.net" class="glass px-5 py-2 rounded-xl text-[10px] font-black text-red-500 uppercase tracking-widest hover:bg-red-500/10 transition border border-red-500/20">
                 ← PORTAL
             </a>
-            <div class="text-[10px] font-bold text-gray-500 tracking-widest uppercase italic">System-Protokoll V2.6</div>
+            <div class="text-[10px] font-bold text-gray-500 tracking-widest uppercase italic">System-Protokoll V2.7</div>
         </header>
 
         <div id="status-banner" class="rounded-[1.5rem] p-6 mb-12 flex items-center gap-6 shadow-2xl transition-all border-l-8">
@@ -104,28 +97,24 @@
     </div>
 
     <script>
-        // Banner Logic
-        const banner = document.getElementById('status-banner');
-        const icon = document.getElementById('status-icon');
-        const text = document.getElementById('status-text');
+        // Initialisiere Banner aus Config
+        function initBanner() {
+            const banner = document.getElementById('status-banner');
+            const icon = document.getElementById('status-icon');
+            const text = document.getElementById('status-text');
+            const type = STATUS_CONFIG.globalStatus.type;
 
-        const config = {
-            online: { color: 'green', char: '✓' },
-            warning: { color: 'orange', char: '!' },
-            critical: { color: 'red', char: '✕' }
-        }[GLOBAL_STATUS_TYPE];
+            const styles = {
+                online: { color: 'green', char: '✓' },
+                warning: { color: 'orange', char: '!' },
+                critical: { color: 'red', char: '✕' }
+            }[type] || { color: 'gray', char: '?' };
 
-        banner.className += ` bg-${config.color}-500/10 border-${config.color}-500 text-${config.color}-400`;
-        icon.className += ` bg-${config.color}-500/20`;
-        icon.innerText = config.char;
-        text.innerText = GLOBAL_STATUS_MSG;
-
-        const MONITORS = {
-            java:   'm802228348-28e6cbe112134f661ce9d6ac',
-            web:    'KEY_WEBSITE', 
-            player: 'KEY_PLAYERPORTAL',
-            domain: 'KEY_DOMAIN'
-        };
+            banner.className += ` bg-${styles.color}-500/10 border-${styles.color}-500 text-${styles.color}-400`;
+            icon.className += ` bg-${styles.color}-500/20`;
+            icon.innerText = styles.char;
+            text.innerText = STATUS_CONFIG.globalStatus.message;
+        }
 
         async function updateMonitor(key, prefix) {
             if (!key || key.includes('KEY_')) return;
@@ -168,15 +157,23 @@
                     };
                     container.appendChild(bar);
                 }
-            } catch(e) { console.error("Error", prefix); }
+            } catch(e) { console.error("Error fetching", prefix); }
         }
 
         function startSync() {
-            Object.keys(MONITORS).forEach(id => updateMonitor(MONITORS[id], id));
+            const keys = STATUS_CONFIG.monitors;
+            updateMonitor(keys.java, 'java');
+            updateMonitor(keys.web, 'web');
+            updateMonitor(keys.player, 'player');
+            updateMonitor(keys.domain, 'domain');
             document.getElementById('sync-time').innerText = `LAST SYNC: ${new Date().toLocaleTimeString()}`;
         }
 
-        document.addEventListener('click', () => document.querySelectorAll('.detail-box').forEach(el => el.style.display = 'none'));
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.detail-box').forEach(el => el.style.display = 'none');
+        });
+
+        initBanner();
         startSync();
         setInterval(startSync, 120000);
     </script>
