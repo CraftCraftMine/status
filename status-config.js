@@ -2,8 +2,8 @@ const STATUS_CONFIG = {
     // Banner-Einstellungen
     // type: 'online' (grün), 'warning' (gelb), 'critical' (rot)
     globalStatus: {
-        type: 'warning',
-        message: 'Es kann zu ausfällen mit unserer neuen IP führen! Wir Arbeiten daran das Problem zu beheben!'
+        type: 'online',
+        message: 'Alles normal'
     },
 
     // UptimeRobot API Keys
