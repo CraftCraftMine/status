@@ -3,7 +3,7 @@ const STATUS_CONFIG = {
     // type: 'online' (grün), 'warning' (gelb), 'critical' (rot)
     globalStatus: {
         type: 'online',
-        message: 'Alles normal'
+        message: 'Alles suppi'
     },
 
     // UptimeRobot API Keys
